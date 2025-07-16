@@ -16,10 +16,13 @@ function PharmacyPage() {
   const [form, setForm] = useState({ name: '', address: '', phone: '' });
   const [selectedId, setSelectedId] = useState(null);
 
+  const token = localStorage.getItem('token');
   const fetchPharmacies = () => {
-    axios.get(API_URL).then(res => setPharmacies(res.data));
+    axios.get(API_URL, { headers: { Authorization: `Bearer ${token}` } })
+      .then(res => setPharmacies(res.data));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchPharmacies();
   }, []);
@@ -49,16 +52,16 @@ function PharmacyPage() {
 
   const handleSubmit = async () => {
     if (editMode) {
-      await axios.put(`${API_URL}/${selectedId}`, form);
+      await axios.put(`${API_URL}/${selectedId}`, form, { headers: { Authorization: `Bearer ${token}` } });
     } else {
-      await axios.post(API_URL, form);
+      await axios.post(API_URL, form, { headers: { Authorization: `Bearer ${token}` } });
     }
     fetchPharmacies();
     handleClose();
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`${API_URL}/${id}`);
+    await axios.delete(`${API_URL}/${id}`, { headers: { Authorization: `Bearer ${token}` } });
     fetchPharmacies();
   };
 

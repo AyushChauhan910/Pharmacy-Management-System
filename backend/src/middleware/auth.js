@@ -1,8 +1,4 @@
-const express = require('express');
-const router = express.Router();
-const authController = require('../controllers/authController');
 const jwt = require('jsonwebtoken');
-
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
 function authMiddleware(req, res, next) {
@@ -12,13 +8,19 @@ function authMiddleware(req, res, next) {
     try {
       req.user = jwt.verify(token, JWT_SECRET);
     } catch (e) {
-      req.user = null;
+      return res.status(401).json({ error: 'Invalid token' });
     }
+  } else {
+    return res.status(401).json({ error: 'No token provided' });
   }
   next();
 }
 
-router.post('/login', authController.login);
-router.post('/register', authMiddleware, authController.register);
+function isAdmin(req, res, next) {
+  if (req.user && req.user.role === 'admin') {
+    return next();
+  }
+  return res.status(403).json({ error: 'Admin access required' });
+}
 
-module.exports = router; 
+module.exports = { authMiddleware, isAdmin }; 

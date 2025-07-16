@@ -12,10 +12,16 @@ import RegisterPage from './pages/RegisterPage';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import Box from '@mui/material/Box';
+import UserManagementPage from './pages/UserManagementPage';
 
 function RequireAuth({ children }) {
   const token = localStorage.getItem('token');
   return token ? children : <Navigate to="/login" />;
+}
+
+function RequireAdmin({ children }) {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  return user.role === 'admin' ? children : <Navigate to="/" />;
 }
 
 function AppContent() {
@@ -49,6 +55,7 @@ function AppContent() {
           <Route path="/doctors" element={<RequireAuth><DoctorPage /></RequireAuth>} />
           <Route path="/pharmacies" element={<RequireAuth><PharmacyPage /></RequireAuth>} />
           <Route path="/drugs" element={<RequireAuth><DrugPage /></RequireAuth>} />
+          <Route path="/users" element={<RequireAuth><RequireAdmin><UserManagementPage /></RequireAdmin></RequireAuth>} />
         </Routes>
       </Box>
     </Box>

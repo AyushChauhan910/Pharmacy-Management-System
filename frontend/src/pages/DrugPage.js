@@ -16,10 +16,13 @@ function DrugPage() {
   const [form, setForm] = useState({ tradeName: '', formula: '', companyName: '' });
   const [selected, setSelected] = useState({ tradeName: '', companyName: '' });
 
+  const token = localStorage.getItem('token');
   const fetchDrugs = () => {
-    axios.get(API_URL).then(res => setDrugs(res.data));
+    axios.get(API_URL, { headers: { Authorization: `Bearer ${token}` } })
+      .then(res => setDrugs(res.data));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchDrugs();
   }, []);
@@ -49,16 +52,16 @@ function DrugPage() {
 
   const handleSubmit = async () => {
     if (editMode) {
-      await axios.put(`${API_URL}/${selected.tradeName}/${selected.companyName}`, form);
+      await axios.put(`${API_URL}/${selected.tradeName}/${selected.companyName}`, form, { headers: { Authorization: `Bearer ${token}` } });
     } else {
-      await axios.post(API_URL, form);
+      await axios.post(API_URL, form, { headers: { Authorization: `Bearer ${token}` } });
     }
     fetchDrugs();
     handleClose();
   };
 
   const handleDelete = async (tradeName, companyName) => {
-    await axios.delete(`${API_URL}/${tradeName}/${companyName}`);
+    await axios.delete(`${API_URL}/${tradeName}/${companyName}`, { headers: { Authorization: `Bearer ${token}` } });
     fetchDrugs();
   };
 

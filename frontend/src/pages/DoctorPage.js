@@ -16,10 +16,13 @@ function DoctorPage() {
   const [form, setForm] = useState({ aadharID: '', name: '', specialty: '', experience: '' });
   const [selectedId, setSelectedId] = useState(null);
 
+  const token = localStorage.getItem('token');
   const fetchDoctors = () => {
-    axios.get(API_URL).then(res => setDoctors(res.data));
+    axios.get(API_URL, { headers: { Authorization: `Bearer ${token}` } })
+      .then(res => setDoctors(res.data));
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchDoctors();
   }, []);
@@ -49,16 +52,16 @@ function DoctorPage() {
 
   const handleSubmit = async () => {
     if (editMode) {
-      await axios.put(`${API_URL}/${selectedId}`, form);
+      await axios.put(`${API_URL}/${selectedId}`, form, { headers: { Authorization: `Bearer ${token}` } });
     } else {
-      await axios.post(API_URL, form);
+      await axios.post(API_URL, form, { headers: { Authorization: `Bearer ${token}` } });
     }
     fetchDoctors();
     handleClose();
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`${API_URL}/${id}`);
+    await axios.delete(`${API_URL}/${id}`, { headers: { Authorization: `Bearer ${token}` } });
     fetchDoctors();
   };
 

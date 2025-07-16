@@ -12,16 +12,20 @@ exports.login = async (req, res) => {
   const token = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, { expiresIn: '1d' });
   res.json({
     token,
-    user: { name: user.name, username: user.username }
+    user: { name: user.name, username: user.username, role: user.role }
   });
 };
 
 exports.register = async (req, res) => {
-  const { username, password, name } = req.body;
+  const { username, password, name, role } = req.body;
   if (!username || !password || !name) return res.status(400).json({ error: 'All fields required' });
   const existing = await User.findOne({ username });
   if (existing) return res.status(409).json({ error: 'Username already exists' });
-  const user = new User({ username, password, name });
+  let userRole = 'user';
+  if (role && req.user && req.user.role === 'admin') {
+    userRole = role;
+  }
+  const user = new User({ username, password, name, role: userRole });
   await user.save();
-  res.status(201).json({ message: 'User registered', user: { username: user.username, name: user.name } });
+  res.status(201).json({ message: 'User registered', user: { username: user.username, name: user.name, role: user.role } });
 }; 

@@ -19,6 +19,7 @@ const prescriptionDetailsRoutes = require('./routes/prescriptionDetailsRoutes');
 const contractRoutes = require('./routes/contractRoutes');
 const patientDoctorRoutes = require('./routes/patientDoctorRoutes');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Use routes
 app.use('/api/patients', patientRoutes);
@@ -32,6 +33,7 @@ app.use('/api/prescription-details', prescriptionDetailsRoutes);
 app.use('/api/contracts', contractRoutes);
 app.use('/api/patient-doctors', patientDoctorRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

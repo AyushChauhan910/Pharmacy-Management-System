@@ -6,12 +6,13 @@ function Dashboard() {
   const [counts, setCounts] = useState({ patients: 0, doctors: 0, pharmacies: 0, drugs: 0 });
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const fetchCounts = async () => {
       const [patients, doctors, pharmacies, drugs] = await Promise.all([
-        axios.get('http://localhost:5000/api/patients'),
-        axios.get('http://localhost:5000/api/doctors'),
-        axios.get('http://localhost:5000/api/pharmacies'),
-        axios.get('http://localhost:5000/api/drugs'),
+        axios.get('http://localhost:5000/api/patients', { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get('http://localhost:5000/api/doctors', { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get('http://localhost:5000/api/pharmacies', { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get('http://localhost:5000/api/drugs', { headers: { Authorization: `Bearer ${token}` } }),
       ]);
       setCounts({
         patients: patients.data.length,
