@@ -1,74 +1,148 @@
-import React, { useState, useEffect } from 'react';
-import { ThemeProvider } from '@mui/material/styles';
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import theme from './theme/theme';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { SnackbarProvider } from 'notistack';
+import { Slide, Fade } from '@mui/material';
+
+import Layout from './components/Layout';
+import Dashboard from './pages/Dashboard';
 import PatientPage from './pages/PatientPage';
 import DoctorPage from './pages/DoctorPage';
 import PharmacyPage from './pages/PharmacyPage';
 import DrugPage from './pages/DrugPage';
-import Dashboard from './pages/Dashboard';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import Sidebar from './components/Sidebar';
-import Topbar from './components/Topbar';
-import Box from '@mui/material/Box';
 import UserManagementPage from './pages/UserManagementPage';
 
-function RequireAuth({ children }) {
-  const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/login" />;
-}
-
-function RequireAdmin({ children }) {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  return user.role === 'admin' ? children : <Navigate to="/" />;
-}
-
-function AppContent() {
-  const [user, setUser] = useState(null);
-  const location = useLocation();
-
-  useEffect(() => {
-    const userStr = localStorage.getItem('user');
-    if (userStr) setUser(JSON.parse(userStr));
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-    window.location.href = '/login';
+function App() {
+  const isAuthenticated = () => {
+    return localStorage.getItem('token') !== null;
   };
 
-  const showTopbar = location.pathname !== '/login' && location.pathname !== '/register';
+  const isAdmin = () => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return user.role === 'admin';
+  };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      {showTopbar && <Topbar user={user} onLogout={handleLogout} />}
-      {showTopbar && <Sidebar />}
-      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: showTopbar ? 8 : 0 }}>
+    <SnackbarProvider
+      maxSnack={3}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      TransitionComponent={Slide}
+      autoHideDuration={4000}
+    >
+      <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/" element={<RequireAuth><Dashboard /></RequireAuth>} />
-          <Route path="/patients" element={<RequireAuth><PatientPage /></RequireAuth>} />
-          <Route path="/doctors" element={<RequireAuth><DoctorPage /></RequireAuth>} />
-          <Route path="/pharmacies" element={<RequireAuth><PharmacyPage /></RequireAuth>} />
-          <Route path="/drugs" element={<RequireAuth><DrugPage /></RequireAuth>} />
-          <Route path="/users" element={<RequireAuth><RequireAdmin><UserManagementPage /></RequireAdmin></RequireAuth>} />
+          <Route path="/login" element={
+            <Fade in timeout={500}>
+              <div>
+                <LoginPage />
+              </div>
+            </Fade>
+          } />
+          <Route path="/register" element={
+            <Fade in timeout={500}>
+              <div>
+                <RegisterPage />
+              </div>
+            </Fade>
+          } />
+          <Route path="/" element={
+            isAuthenticated() ? (
+              <Fade in timeout={500}>
+                <div>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </div>
+              </Fade>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          <Route path="/dashboard" element={
+            isAuthenticated() ? (
+              <Fade in timeout={500}>
+                <div>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </div>
+              </Fade>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          <Route path="/patients" element={
+            isAuthenticated() ? (
+              <Fade in timeout={500}>
+                <div>
+                  <Layout>
+                    <PatientPage />
+                  </Layout>
+                </div>
+              </Fade>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          <Route path="/doctors" element={
+            isAuthenticated() ? (
+              <Fade in timeout={500}>
+                <div>
+                  <Layout>
+                    <DoctorPage />
+                  </Layout>
+                </div>
+              </Fade>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          <Route path="/pharmacies" element={
+            isAuthenticated() ? (
+              <Fade in timeout={500}>
+                <div>
+                  <Layout>
+                    <PharmacyPage />
+                  </Layout>
+                </div>
+              </Fade>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          <Route path="/drugs" element={
+            isAuthenticated() ? (
+              <Fade in timeout={500}>
+                <div>
+                  <Layout>
+                    <DrugPage />
+                  </Layout>
+                </div>
+              </Fade>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          <Route path="/users" element={
+            isAuthenticated() && isAdmin() ? (
+              <Fade in timeout={500}>
+                <div>
+                  <Layout>
+                    <UserManagementPage />
+                  </Layout>
+                </div>
+              </Fade>
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          } />
         </Routes>
-      </Box>
-    </Box>
-  );
-}
-
-function App() {
-  return (
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </ThemeProvider>
+      </Router>
+    </SnackbarProvider>
   );
 }
 
