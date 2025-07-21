@@ -27,6 +27,10 @@ A modern, full-stack Pharmacy Management System built with **React**, **Node.js/
 
 ---
 
+## Live Link - 
+https://pharmacy-management-system-ten.vercel.app/
+
+---
 
 ## ⚡ Quick Start
 
