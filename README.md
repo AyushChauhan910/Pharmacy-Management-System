@@ -27,16 +27,6 @@ A modern, full-stack Pharmacy Management System built with **React**, **Node.js/
 
 ---
 
-## 📸 Screenshots
-
-> _Add your screenshots here!_
-
-- **Dashboard**: Animated cards, charts, and entity stats
-- **Entity Pages**: Modern tables with search, sort, pagination, and export
-- **Dark Mode**: Instantly switch between light and dark themes
-- **User Management**: Admin-only user CRUD and role assignment
-
----
 
 ## ⚡ Quick Start
 
@@ -132,6 +122,3 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 - [notistack](https://iamhosseindhv.com/notistack)
 - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
 
----
-
-> _Made with ❤️ for modern pharmacy management!_
