@@ -23,12 +23,13 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const API_URL = process.env.REACT_APP_API_URL;
     const fetchCounts = async () => {
       const [patients, doctors, pharmacies, drugs] = await Promise.all([
-        axios.get('http://localhost:5000/api/patients', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:5000/api/doctors', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:5000/api/pharmacies', { headers: { Authorization: `Bearer ${token}` } }),
-        axios.get('http://localhost:5000/api/drugs', { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_URL}/patients`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_URL}/doctors`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_URL}/pharmacies`, { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(`${API_URL}/drugs`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
       setCounts({
         patients: patients.data.length,

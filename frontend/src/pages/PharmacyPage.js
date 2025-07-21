@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 
-const API_URL = 'http://localhost:5000/api/pharmacies';
+const API_URL = process.env.REACT_APP_API_URL + '/pharmacies';
 
 function PharmacyPage() {
   const [pharmacies, setPharmacies] = useState([]);

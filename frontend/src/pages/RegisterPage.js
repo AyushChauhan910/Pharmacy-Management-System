@@ -15,7 +15,7 @@ function RegisterPage() {
       return;
     }
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post(process.env.REACT_APP_API_URL + '/auth/register', {
         username: form.username,
         email: form.email,
         password: form.password
